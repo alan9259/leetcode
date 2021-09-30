@@ -1,4 +1,6 @@
-# Preview Binary Search Template
+# Binary Search Template
+
+## Preview Binary Search Template
 
 First thing first, here is the code:
 ~~~
@@ -69,13 +71,13 @@ Below I'll show you guys how to apply this powerful template to many LeetCode pr
 
 You are a product manager and currently leading a team to develop a new product. Since each version is developed based on the previous version, all the versions after a bad version are also bad. Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad. You are given an API bool isBadVersion(version) which will return whether version is bad.
 
-Example:
-
-Given n = 5, and version = 4 is the first bad version.  
-call isBadVersion(3) -> false  
-call isBadVersion(5) -> true  
-call isBadVersion(4) -> true  
-Then 4 is the first bad version.   
+> Example:
+>
+> Given n = 5, and version = 4 is the first bad version.  
+> call isBadVersion(3) -> false  
+> call isBadVersion(5) -> true  
+> call isBadVersion(4) -> true  
+> Then 4 is the first bad version.   
 
 First, we initialize left = 1 and right = n to include all possible values. Then we notice that we don't even need to design the condition function. It's already given by the isBadVersion API. Finding the first bad version is equivalent to finding the minimal k satisfying isBadVersion(k) is True. Our template can fit in very nicely:
 
@@ -96,12 +98,12 @@ class Solution:
 
 Implement int sqrt(int x). Compute and return the square root of x, where x is guaranteed to be a non-negative integer. Since the return type is an integer, the decimal digits are truncated and only the integer part of the result is returned.
 
-Example:
-
-Input: 4  
-Output: 2  
-Input: 8  
-Output: 2  
+> Example:
+> 
+> Input: 4  
+> Output: 2  
+> Input: 8  
+> Output: 2  
 
 Quite an easy problem. We need to search for maximal k satisfying k^2 <= x, so we can easily come up with the solution:
 
@@ -122,12 +124,12 @@ There's one thing I'd like to point out. Remember I say that we usually look for
 
 Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order. You may assume no duplicates in the array.
 
-Example:
-
-Input: [1,3,5,6], 5  
-Output: 2  
-Input: [1,3,5,6], 2  
-Output: 1  
+> Example:
+>
+> Input: [1,3,5,6], 5  
+> Output: 2  
+> Input: [1,3,5,6], 2  
+> Output: 1  
 
 Very classic application of binary search. We are looking for the minimal k value satisfying nums[k] >= target, and we can just copy-paste our template. Notice that our solution is correct regardless of whether the input array nums has duplicates. Also notice that the input target might be larger than all elements in nums and therefore needs to placed at the end of the array. That's why we should initialize right = len(nums) instead of right = len(nums) - 1.
 
@@ -155,20 +157,20 @@ The i-th package on the conveyor belt has a weight of weights[i]. Each day, we l
 
 Return the least weight capacity of the ship that will result in all the packages on the conveyor belt being shipped within D days.
 
-Example :  
-
-Input: weights = [1,2,3,4,5,6,7,8,9,10], D = 5  
-Output: 15  
-
-Explanation: 
-A ship capacity of 15 is the minimum to ship all the packages in 5 days like this:  
-1st day: 1, 2, 3, 4, 5  
-2nd day: 6, 7  
-3rd day: 8  
-4th day: 9  
-5th day: 10  
-
-Note that the cargo must be shipped in the order given, so using a ship of capacity 14 and splitting the packages into parts like (2, 3, 4, 5), (1, 6, 7), (8), (9), (10) is not allowed. 
+> Example :  
+>
+> Input: weights = [1,2,3,4,5,6,7,8,9,10], D = 5  
+> Output: 15  
+>
+> Explanation: 
+> A ship capacity of 15 is the minimum to ship all the packages in 5 days like this:  
+> 1st day: 1, 2, 3, 4, 5  
+> 2nd day: 6, 7  
+> 3rd day: 8  
+> 4th day: 9  
+> 5th day: 10  
+>
+> Note that the cargo must be shipped in the order given, so using a ship of capacity 14 and splitting the packages into parts like (2, 3, 4, 5), (1, 6, 7), (8), (9), (10) is not allowed. 
 
 Binary search probably would not come to our mind when we first meet this problem. We might automatically treat weights as search space and then realize we've entered a dead end after wasting lots of time. In fact, we are looking for the minimal one among all feasible capacities. We dig out the monotonicity of this problem: if we can successfully ship all packages within D days with capacity m, then we can definitely ship them all with any capacity larger than m. Now we can design a condition function, let's call it feasible, given an input capacity, it returns whether it's possible to ship all packages within D days. This can run in a greedy way: if there's still room for the current package, we put this package onto the conveyor belt, otherwise we wait for the next day to place this package. If the total days needed exceeds D, we return False, otherwise we return True.
 
@@ -204,17 +206,18 @@ def shipWithinDays(weights: List[int], D: int) -> int:
 
 Given an array which consists of non-negative integers and an integer m, you can split the array into m non-empty continuous subarrays. Write an algorithm to minimize the largest sum among these m subarrays.
 
-Example:  
+> Example:  
+>
+> Input:  
+> nums = [7,2,5,10,8]  
+> m = 2  
+>
+> Output:  
+> 18
+>
+>Explanation:  
+> There are four ways to split nums into two subarrays. The best way is to split it into [7,2,5] and [10,8], where the largest sum among the two subarrays is only 18.
 
-Input:  
-nums = [7,2,5,10,8]  
-m = 2  
-
-Output:  
-18
-
-Explanation:  
-There are four ways to split nums into two subarrays. The best way is to split it into [7,2,5] and [10,8], where the largest sum among the two subarrays is only 18.
 If you take a close look, you would probably see how similar this problem is with LC 1011 above. Similarly, we can design a feasible function: given an input threshold, then decide if we can split the array into several subarrays such that every subarray-sum is less than or equal to threshold. In this way, we discover the monotonicity of the problem: if feasible(m) is True, then all inputs larger than m can satisfy feasible function. You can see that the solution code is exactly the same as LC 1011.
 
 ~~~
@@ -251,14 +254,14 @@ Koko loves to eat bananas. There are N piles of bananas, the i-th pile has piles
 
 Koko likes to eat slowly, but still wants to finish eating all the bananas before the guards come back. Return the minimum integer K such that she can eat all the bananas within H hours.
 
-Example :
-
-Input: piles = [3,6,7,11], H = 8  
-Output: 4  
-Input: piles = [30,11,23,4,20], H = 5  
-Output: 30  
-Input: piles = [30,11,23,4,20], H = 6  
-Output: 23    
+> Example :
+> 
+> Input: piles = [3,6,7,11], H = 8  
+> Output: 4  
+> Input: piles = [30,11,23,4,20], H = 5  
+> Output: 30  
+> Input: piles = [30,11,23,4,20], H = 6  
+> Output: 23    
 
 Very similar to LC 1011 and LC 410 mentioned above. Let's design a feasible function, given an input speed, determine whether Koko can finish all bananas within H hours with hourly eating speed speed. Obviously, the lower bound of the search space is 1, and upper bound is max(piles), because Koko can only choose one pile of bananas to eat every hour.
 
@@ -282,21 +285,23 @@ def minEatingSpeed(piles: List[int], H: int) -> int:
 
 Given an integer array bloomDay, an integer m and an integer k. We need to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden. The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet. Return the minimum number of days you need to wait to be able to make m bouquets from the garden. If it is impossible to make m bouquets return -1.
 
-Examples:
-
-Input: bloomDay = [1,10,3,10,2], m = 3, k = 1  
-Output: 3  
-
-Explanation:  
-Let's see what happened in the first three days. x means flower bloomed and _ means flower didn't bloom in the garden.  
-We need 3 bouquets each should contain 1 flower.  
-After day 1: [x, _, _, _, _]   // we can only make one bouquet.  
-After day 2: [x, _, _, _, x]   // we can only make two bouquets.  
-After day 3: [x, _, x, _, x]   // we can make 3 bouquets. The answer is 3.  
-Input: bloomDay = [1,10,3,10,2], m = 3, k = 2  
-Output: -1  
-Explanation:  
-We need 3 bouquets each has 2 flowers, that means we need 6 flowers. We only have 5 flowers so it is impossible to get the needed bouquets and we return -1.  
+> Examples:
+>
+> Input: bloomDay = [1,10,3,10,2], m = 3, k = 1  
+> Output: 3  
+>
+> Explanation:  
+> Let's see what happened in the first three days. x means flower bloomed and _ means flower didn't bloom in the garden.  
+> We need 3 bouquets each should contain 1 flower.  
+> After day 1: [x, _, _, _, _]   // we can only make one bouquet.  
+> After day 2: [x, _, _, _, x]   // we can only make two bouquets.  
+> After day 3: [x, _, x, _, x]   // we can make 3 bouquets. The answer is 3.  
+>
+> Input: bloomDay = [1,10,3,10,2], m = 3, k = 2  
+> Output: -1  
+>
+> Explanation:  
+> We need 3 bouquets each has 2 flowers, that means we need 6 flowers. We only have 5 flowers so it is impossible to get the needed bouquets and we return -1.  
 
 Now that we've solved three advanced problems above, this one should be pretty easy to do. The monotonicity of this problem is very clear: if we can make m bouquets after waiting for d days, then we can definitely finish that as well if we wait more than d days.
 
@@ -328,17 +333,17 @@ def minDays(bloomDay: List[int], m: int, k: int) -> int:
 
 Nearly every one have used the Multiplication Table. But could you find out the k-th smallest number quickly from the multiplication table? Given the height m and the length n of a m * n Multiplication Table, and a positive integer k, you need to return the k-th smallest number in this table.
 
-Example :  
-
-Input: m = 3, n = 3, k = 5  
-Output: 3  
-Explanation:  
-The Multiplication Table:  
-1	2	3  
-2	4	6  
-3	6	9  
-
-The 5-th smallest number is 3 (1, 2, 2, 3, 3).  
+> Example :  
+>
+> Input: m = 3, n = 3, k = 5  
+> Output: 3  
+> Explanation:  
+> The Multiplication Table:  
+> 1	2	3  
+> 2	4	6  
+> 3	6	9  
+>
+> The 5-th smallest number is 3 (1, 2, 2, 3, 3).  
 
 For Kth-Smallest problems like this, what comes to our mind first is Heap. Usually we can maintain a Min-Heap and just pop the top of the Heap for k times. However, that doesn't work out in this problem. We don't have every single number in the entire Multiplication Table, instead, we only have the height and the length of the table. If we are to apply Heap method, we need to explicitly calculate these m * n values and save them to a heap. The time complexity and space complexity of this process are both O(mn), which is quite inefficient. This is when binary search comes in. Remember we say that designing condition function is the most difficult part? In order to find the k-th smallest value in the table, we can design an enough function, given an input num, determine whether there're at least k values less than or equal to num. The minimal num satisfying enough function is the answer we're looking for. Recall that the key to binary search is discovering monotonicity. In this problem, if num satisfies enough, then of course any value larger than num can satisfy. This monotonicity is the fundament of our binary search algorithm.
 
@@ -372,17 +377,18 @@ In LC 410 above, we have doubt "Is the result from binary search actually a suba
 
 Given an integer array, return the k-th smallest distance among all the pairs. The distance of a pair (A, B) is defined as the absolute difference between A and B.
 
-Example :
-
-Input:  
-nums = [1,3,1]  
-k = 1  
-Output: 0  
-Explanation:  
-Following are all the pairs. The 1st smallest distance pair is (1,1), and its distance is 0.  
-(1,3) -> 2  
-(1,1) -> 0  
-(3,1) -> 2  
+> Example :
+>
+> Input:  
+> nums = [1,3,1]  
+> k = 1  
+> Output: 0  
+>
+> Explanation:  
+> Following are all the pairs. The 1st smallest distance pair is (1,1), and its distance is 0.  
+> (1,3) -> 2  
+> (1,1) -> 0  
+> (3,1) -> 2  
 
 Very similar to LC 668 above, both are about finding Kth-Smallest. Just like LC 668, We can design an enough function, given an input distance, determine whether there're at least k pairs whose distances are less than or equal to distance. We can sort the input array and use two pointers (fast pointer and slow pointer, pointed at a pair) to scan it. Both pointers go from leftmost end. If the current pair pointed at has a distance less than or equal to distance, all pairs between these pointers are valid (since the array is already sorted), we move forward the fast pointer. Otherwise, we move forward the slow pointer. By the time both pointers reach the rightmost end, we finish our scan and see if total counts exceed k. Here is the implementation:
 
@@ -417,17 +423,18 @@ def smallestDistancePair(nums: List[int], k: int) -> int:
 
 Write a program to find the n-th ugly number. Ugly numbers are positive integers which are divisible by a or b or c.
 
-Example :
-
-Input: n = 3, a = 2, b = 3, c = 5  
-Output: 4  
-Explanation: 
-The ugly numbers are 2, 3, 4, 5, 6, 8, 9, 10... The 3rd is 4.  
-
-Input: n = 4, a = 2, b = 3, c = 4  
-Output: 6  
-Explanation:  
-The ugly numbers are 2, 3, 4, 6, 8, 9, 10, 12... The 4th is 6.
+> Example :
+>
+> Input: n = 3, a = 2, b = 3, c = 5  
+> Output: 4  
+> 
+> Explanation: 
+> The ugly numbers are 2, 3, 4, 5, 6, 8, 9, 10... The 3rd is 4.  
+>
+> Input: n = 4, a = 2, b = 3, c = 4  
+> Output: 6  
+> Explanation:  
+> The ugly numbers are 2, 3, 4, 6, 8, 9, 10, 12... The 4th is 6.
 
 Nothing special. Still finding the Kth-Smallest. We need to design an enough function, given an input num, determine whether there are at least n ugly numbers less than or equal to num. Since a might be a multiple of b or c, or the other way round, we need the help of greatest common divisor to avoid counting duplicate numbers.
 
@@ -457,14 +464,14 @@ Given an array of integers nums and an integer threshold, we will choose a posit
 
 Each result of division is rounded to the nearest integer greater than or equal to that element. (For example: 7/3 = 3 and 10/2 = 5). It is guaranteed that there will be an answer.
 
-Example :
-
-Input: nums = [1,2,5,9], threshold = 6  
-Output: 5  
-Explanation:   
-We can get a sum to 17 (1+2+5+9) if the divisor is 1. 
-
-If the divisor is 4 we can get a sum to 7 (1+1+2+3) and if the divisor is 5 the sum will be 5 (1+1+1+2). 
+> Example :
+>
+> Input: nums = [1,2,5,9], threshold = 6  
+> Output: 5  
+> Explanation:   
+> We can get a sum to 17 (1+2+5+9) if the divisor is 1. 
+>
+>If the divisor is 4 we can get a sum to 7 (1+1+2+3) and if the divisor is 5 the sum will be 5 (1+1+1+2). 
 
 After so many problems introduced above, this one should be a piece of cake. We don't even need to bother to design a condition function, because the problem has already told us explicitly what condition we need to satisfy.
 
@@ -488,9 +495,9 @@ Wow, thank you so much for making it to the end, really appreciate that. As you 
 
 Hope this helps.
 
-**Reference**
+## Reference
 
-[C++ / Fast / Very clear explanation / Clean Code] Solution with Greedy Algorithm and Binary Search  
-Approach the problem using the "trial and error" algorithm  
-Binary Search 101 The-Ultimate-Binary-Search-Handbook - LeetCode  
-ugly-number-iii Binary Search with picture & Binary Search Template - LeetCode  
+- *[C++ / Fast / Very clear explanation / Clean Code] Solution with Greedy Algorithm and Binary Search*  
+- *Approach the problem using the "trial and error" algorithm*  
+- *Binary Search 101 The-Ultimate-Binary-Search-Handbook - LeetCode*  
+- *ugly-number-iii Binary Search with picture & Binary Search Template - LeetCode*  
